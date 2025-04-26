@@ -19,7 +19,7 @@ import java.util.*;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthorResource {
-    private static Map<Integer, Author> authorStore = new HashMap<>();
+    public static Map<Integer, Author> authorStore = new HashMap<>();
     private static Map<Integer, Book> bookStore = BookResource.bookStore;
     private static int currentId = 1;
 

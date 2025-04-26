@@ -24,10 +24,18 @@ public class BookResource {
 
     @POST
     public Response createBook(Book book) {
+        // Check if authorId exists in authorStore
+        if (!AuthorResource.authorStore.containsKey(book.getAuthorId())) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid author ID: Author does not exist")
+                    .build();
+        }
+
         book.setId(currentId++);
         bookStore.put(book.getId(), book);
         return Response.status(Response.Status.CREATED).entity(book).build();
     }
+
 
     @GET
     public Collection<Book> getAllBooks() {
