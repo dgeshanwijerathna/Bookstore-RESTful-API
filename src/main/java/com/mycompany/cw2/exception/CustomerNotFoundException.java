@@ -8,6 +8,19 @@ package com.mycompany.cw2.exception;
  *
  * @author ASUS
  */
-public class CustomerNotFoundException {
+public class CustomerNotFoundException extends RuntimeException {
+    private int customerId;
     
+    public CustomerNotFoundException(int customerId) {
+        super("Customer with ID " + customerId + " not found");
+        this.customerId = customerId;
+    }
+    
+    public CustomerNotFoundException(String message) {
+        super(message);
+    }
+    
+    public int getCustomerId() {
+        return customerId;
+    }
 }

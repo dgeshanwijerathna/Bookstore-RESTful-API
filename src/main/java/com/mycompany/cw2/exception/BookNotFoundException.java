@@ -8,6 +8,19 @@ package com.mycompany.cw2.exception;
  *
  * @author ASUS
  */
-public class BookNotFoundException {
+public class BookNotFoundException extends RuntimeException {
+    private int bookId;
     
+    public BookNotFoundException(int bookId) {
+        super("Book with ID " + bookId + " not found");
+        this.bookId = bookId;
+    }
+    
+    public BookNotFoundException(String message) {
+        super(message);
+    }
+    
+    public int getBookId() {
+        return bookId;
+    }
 }

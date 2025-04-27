@@ -10,7 +10,7 @@ import org.glassfish.jersey.server.ResourceConfig;
  *
  * @author ASUS
  */
-@ApplicationPath("/api")
+@ApplicationPath("/bookstore")
 public class ApplicationConfig extends ResourceConfig {
     public ApplicationConfig() {
        // register(HelloWorldResource.class);
