@@ -7,146 +7,130 @@ package com.mycompany.cw2.resource;
 import com.mycompany.cw2.model.Cart;
 import com.mycompany.cw2.exception.CartNotFoundException;
 import com.mycompany.cw2.exception.BookNotFoundException;
-import com.mycompany.cw2.exception.CustomerNotFoundException;
 import com.mycompany.cw2.exception.InvalidInputException;
+import com.mycompany.cw2.storage.CartDataStore;
+import com.mycompany.cw2.storage.BookDataStore;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
 
 /**
  *
  * @author ASUS
  */
+
 @Path("/customers/{customerId}/cart")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CartResource {
-    private static Map<Integer, Cart> cartStore = new HashMap<>();
-    private BookResource bookService = new BookResource();
-    
-    // Define a class to receive the book ID in JSON format
+
+    // Inner class to receive bookId from POST/PUT requests
     public static class BookIdRequest {
         private int bookId;
-        
-        // Default constructor needed for JSON deserialization
+
         public BookIdRequest() {}
-        
-        // Getters and setters
+
         public int getBookId() { return bookId; }
         public void setBookId(int bookId) { this.bookId = bookId; }
     }
-    
-    
+
     @POST
     @Path("/items")
     public Response addBookToCart(@PathParam("customerId") int customerId, BookIdRequest request) {
-        // Validate customerId
-        if (customerId <= 0) {
-            throw new InvalidInputException("Customer ID must be a positive number");
+        validateCustomerId(customerId);
+        validateBookId(request.getBookId());
+
+        if (BookDataStore.getBookById(request.getBookId()) == null) {
+            throw new BookNotFoundException(request.getBookId());
         }
-        
-        // Validate bookId
-        int bookId = request.getBookId();
-        if (bookId <= 0) {
-            throw new InvalidInputException("Book ID must be a positive number");
-        }
-        
-        // Check if book exists
-        if (bookService.getBookById(bookId) == null) {
-            throw new BookNotFoundException(bookId);
-        }
-        
-        Cart cart = cartStore.computeIfAbsent(customerId, Cart::new);
-        cart.addBook(bookId);
-        
+
+        Cart cart = CartDataStore.getOrCreateCart(customerId);
+        cart.addBook(request.getBookId());
+        CartDataStore.saveCart(customerId, cart);
+
         return Response.status(Response.Status.CREATED).entity(cart).build();
     }
-    
-   
+
     @GET
     public Response getCart(@PathParam("customerId") int customerId) {
-        // Validate customerId
-        if (customerId <= 0) {
-            throw new InvalidInputException("Customer ID must be a positive number");
-        }
-        
-        Cart cart = cartStore.get(customerId);
+        validateCustomerId(customerId);
+
+        Cart cart = CartDataStore.getCartByCustomerId(customerId);
         if (cart == null) {
             throw new CartNotFoundException(customerId);
         }
-        
         return Response.ok(cart).build();
     }
-    
+
     @PUT
     @Path("/items/{bookId}")
     public Response updateCartItem(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {
-        // Validate customerId and bookId
-        if (customerId <= 0) {
-            throw new InvalidInputException("Customer ID must be a positive number");
-        }
-        
-        if (bookId <= 0) {
-            throw new InvalidInputException("Book ID must be a positive number");
-        }
-        
-        // Check if book exists
-        if (bookService.getBookById(bookId) == null) {
+        validateCustomerId(customerId);
+        validateBookId(bookId);
+
+        if (BookDataStore.getBookById(bookId) == null) {
             throw new BookNotFoundException(bookId);
         }
-        
-        Cart cart = cartStore.get(customerId);
+
+        Cart cart = CartDataStore.getCartByCustomerId(customerId);
         if (cart == null) {
             throw new CartNotFoundException(customerId);
         }
-        
-        cart.addBook(bookId); 
-        
+
+        cart.addBook(bookId);
+        CartDataStore.saveCart(customerId, cart);
+
         return Response.ok(cart).build();
     }
-    
+
     @DELETE
     @Path("/items/{bookId}")
     public Response removeBookFromCart(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {
-        // Validate customerId and bookId
-        if (customerId <= 0) {
-            throw new InvalidInputException("Customer ID must be a positive number");
-        }
-        
-        if (bookId <= 0) {
-            throw new InvalidInputException("Book ID must be a positive number");
-        }
-        
-        Cart cart = cartStore.get(customerId);
+        validateCustomerId(customerId);
+        validateBookId(bookId);
+
+        Cart cart = CartDataStore.getCartByCustomerId(customerId);
         if (cart == null) {
             throw new CartNotFoundException(customerId);
         }
-        
-        // Check if book exists in cart before removing
+
         if (!cart.getBookIds().contains(bookId)) {
             throw new BookNotFoundException("Book with ID " + bookId + " not found in cart");
         }
-        
+
         cart.removeBook(bookId);
-        
+        CartDataStore.saveCart(customerId, cart);
+
         return Response.ok(cart).build();
     }
-    
-    public static Cart getCartByCustomerId(int customerId) {
-        Cart cart = cartStore.get(customerId);
+
+    // Utility methods
+    private void validateCustomerId(int customerId) {
+        if (customerId <= 0) {
+            throw new InvalidInputException("Customer ID must be a positive number");
+        }
+    }
+
+    private void validateBookId(int bookId) {
+        if (bookId <= 0) {
+            throw new InvalidInputException("Book ID must be a positive number");
+        }
+    }
+
+    public static Cart getCartByCustomerIdStatic(int customerId) {
+        Cart cart = CartDataStore.getCartByCustomerId(customerId);
         if (cart == null) {
             throw new CartNotFoundException(customerId);
         }
         return cart;
     }
-    
-    public static void clearCart(int customerId) {
-        Cart cart = cartStore.get(customerId);
+
+    public static void clearCartStatic(int customerId) {
+        Cart cart = CartDataStore.getCartByCustomerId(customerId);
         if (cart == null) {
             throw new CartNotFoundException(customerId);
         }
-        cart.getBookIds().clear();
+        CartDataStore.clearCart(customerId);
     }
 }

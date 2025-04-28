@@ -3,6 +3,7 @@ package com.mycompany.cw2.resource;
 import com.mycompany.cw2.model.Customer;
 import com.mycompany.cw2.exception.CustomerNotFoundException;
 import com.mycompany.cw2.exception.InvalidInputException;
+import com.mycompany.cw2.storage.CustomerDataStore;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,72 +14,67 @@ import java.util.*;
  *
  * @author ASUS
  */
+
+
 @Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource {
-    private static Map<Integer, Customer> customerStore = new HashMap<>();
-    private static int currentId = 1;
-    
+
     @POST
     public Response createCustomer(Customer customer) {
-        // Validate input
         if (customer == null) {
             throw new InvalidInputException("Customer data cannot be null");
         }
-        
-        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            throw new InvalidInputException("Customer name cannot be empty");
-        }
-        
-        customer.setId(currentId++);
-        customerStore.put(customer.getId(), customer);
-        return Response.status(Response.Status.CREATED).entity(customer).build();
+
+        validateCustomer(customer);
+        Customer createdCustomer = CustomerDataStore.createCustomer(customer);
+        return Response.status(Response.Status.CREATED).entity(createdCustomer).build();
     }
-    
+
     @GET
     public Collection<Customer> getAllCustomers() {
-        return customerStore.values();
+        return CustomerDataStore.getAllCustomers();
     }
-    
+
     @GET
     @Path("/{id}")
     public Customer getCustomerById(@PathParam("id") int id) {
-        Customer customer = customerStore.get(id);
+        Customer customer = CustomerDataStore.getCustomerById(id);
         if (customer == null) {
             throw new CustomerNotFoundException(id);
         }
         return customer;
     }
-    
+
     @PUT
     @Path("/{id}")
     public Customer updateCustomer(@PathParam("id") int id, Customer updatedCustomer) {
         if (updatedCustomer == null) {
             throw new InvalidInputException("Updated customer data cannot be null");
         }
-        
-        if (!customerStore.containsKey(id)) {
+
+        if (!CustomerDataStore.existsById(id)) {
             throw new CustomerNotFoundException(id);
         }
-        
-        if (updatedCustomer.getName() == null || updatedCustomer.getName().trim().isEmpty()) {
-            throw new InvalidInputException("Customer name cannot be empty");
-        }
-        
-        updatedCustomer.setId(id);
-        customerStore.put(id, updatedCustomer);
-        return updatedCustomer;
+
+        validateCustomer(updatedCustomer);
+        return CustomerDataStore.updateCustomer(id, updatedCustomer);
     }
-    
+
     @DELETE
     @Path("/{id}")
     public Response deleteCustomer(@PathParam("id") int id) {
-        if (!customerStore.containsKey(id)) {
+        Customer deleted = CustomerDataStore.deleteCustomer(id);
+        if (deleted == null) {
             throw new CustomerNotFoundException(id);
         }
-        
-        customerStore.remove(id);
         return Response.noContent().build();
+    }
+
+    private void validateCustomer(Customer customer) {
+        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Customer name cannot be empty");
+        }
     }
 }

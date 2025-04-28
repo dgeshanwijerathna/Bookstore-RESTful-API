@@ -1,4 +1,4 @@
-com\mycompany\cw2\storage\DataStore.class
+com\mycompany\cw2\storage\BookDataStore.class
 com\mycompany\cw2\exception\CustomerNotFoundException.class
 com\mycompany\cw2\model\Book.class
 com\mycompany\cw2\resource\CartResource.class
@@ -7,6 +7,7 @@ com\mycompany\cw2\model\Cart.class
 com\mycompany\cw2\exception\mappers\OutOfStockExceptionMapper.class
 com\mycompany\cw2\resource\OrderResource.class
 com\mycompany\cw2\exception\OutOfStockException.class
+com\mycompany\cw2\storage\CartDataStore.class
 com\mycompany\cw2\resource\BookResource.class
 com\mycompany\cw2\model\Order.class
 com\mycompany\cw2\exception\BookNotFoundException.class
@@ -17,7 +18,10 @@ com\mycompany\cw2\exception\mappers\BookNotFoundExceptionMapper.class
 com\mycompany\cw2\model\Customer.class
 com\mycompany\cw2\ApplicationConfig.class
 com\mycompany\cw2\resource\CartResource$BookIdRequest.class
+com\mycompany\cw2\storage\AuthorDataStore.class
 com\mycompany\cw2\exception\mappers\InvalidInputExceptionMapper.class
+com\mycompany\cw2\storage\CustomerDataStore.class
+com\mycompany\cw2\storage\OrderDataStore.class
 com\mycompany\cw2\exception\mappers\CustomerNotFoundExceptionMapper.class
 com\mycompany\cw2\resource\AuthorResource.class
 com\mycompany\cw2\model\Author.class
