@@ -44,7 +44,7 @@
             <version>2.35</version>
         </dependency>
 
-        <!-- Add Jackson explicitly for better JSON handling -->
+        
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

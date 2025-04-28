@@ -19,7 +19,6 @@ public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFound
     @Override
     public Response toResponse(BookNotFoundException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-       // errorResponse.put("status", Response.Status.NOT_FOUND.getStatusCode());
         errorResponse.put("message", exception.getMessage());
         
         return Response.status(Response.Status.NOT_FOUND)

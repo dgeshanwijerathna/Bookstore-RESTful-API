@@ -19,7 +19,6 @@ public class OutOfStockExceptionMapper implements ExceptionMapper<OutOfStockExce
     @Override
     public Response toResponse(OutOfStockException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-       // errorResponse.put("status", Response.Status.CONFLICT.getStatusCode());
         errorResponse.put("message", exception.getMessage());
         
         // Add additional information for OutOfStockException

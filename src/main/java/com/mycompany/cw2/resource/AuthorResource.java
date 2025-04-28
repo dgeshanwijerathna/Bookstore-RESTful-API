@@ -84,16 +84,12 @@ public class AuthorResource {
             }
         }
         
-        // Optionally handle associated books (e.g., delete them or prevent author deletion)
-        // For this example, we'll allow deletion even if books exist
-        
         return Response.noContent().build();
     }
     
     @GET
     @Path("/{id}/books")
     public List<Book> getBooksByAuthor(@PathParam("id") int id) {
-        // First verify the author exists
         Author author = authorStore.get(id);
         if (author == null) {
             throw new AuthorNotFoundException(id);

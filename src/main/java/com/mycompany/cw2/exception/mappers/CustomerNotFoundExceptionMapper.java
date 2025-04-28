@@ -19,7 +19,6 @@ public class CustomerNotFoundExceptionMapper implements ExceptionMapper<Customer
     @Override
     public Response toResponse(CustomerNotFoundException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-     //   errorResponse.put("status", Response.Status.NOT_FOUND.getStatusCode());
         errorResponse.put("message", exception.getMessage());
         
         return Response.status(Response.Status.NOT_FOUND)

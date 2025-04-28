@@ -10,9 +10,6 @@ import java.util.List;
  *
  * @author ASUS
  */
-
-
-
 public class Cart {
     private int customerId;
     private List<Integer> bookIds = new ArrayList<>();

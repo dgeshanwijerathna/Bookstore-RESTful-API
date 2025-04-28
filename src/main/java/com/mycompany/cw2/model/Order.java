@@ -9,8 +9,6 @@ import java.util.List;
  *
  * @author ASUS
  */
-
-
 public class Order {
     private int id;
     private int customerId;

@@ -9,7 +9,6 @@ import com.mycompany.cw2.exception.CartNotFoundException;
 import com.mycompany.cw2.exception.BookNotFoundException;
 import com.mycompany.cw2.exception.CustomerNotFoundException;
 import com.mycompany.cw2.exception.InvalidInputException;
-//import com.mycompany.cw2.service.BookService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -39,7 +38,7 @@ public class CartResource {
         public void setBookId(int bookId) { this.bookId = bookId; }
     }
     
-    // POST /customers/{customerId}/cart/items
+    
     @POST
     @Path("/items")
     public Response addBookToCart(@PathParam("customerId") int customerId, BookIdRequest request) {
@@ -59,14 +58,13 @@ public class CartResource {
             throw new BookNotFoundException(bookId);
         }
         
-        // Get or create cart
         Cart cart = cartStore.computeIfAbsent(customerId, Cart::new);
         cart.addBook(bookId);
         
         return Response.status(Response.Status.CREATED).entity(cart).build();
     }
     
-    // GET /customers/{customerId}/cart
+   
     @GET
     public Response getCart(@PathParam("customerId") int customerId) {
         // Validate customerId
@@ -82,7 +80,6 @@ public class CartResource {
         return Response.ok(cart).build();
     }
     
-    // PUT /customers/{customerId}/cart/items/{bookId}
     @PUT
     @Path("/items/{bookId}")
     public Response updateCartItem(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {
@@ -105,13 +102,11 @@ public class CartResource {
             throw new CartNotFoundException(customerId);
         }
         
-        // Optional: implement quantity update
-        cart.addBook(bookId); // Simulating as a re-add for now
+        cart.addBook(bookId); 
         
         return Response.ok(cart).build();
     }
     
-    // DELETE /customers/{customerId}/cart/items/{bookId}
     @DELETE
     @Path("/items/{bookId}")
     public Response removeBookFromCart(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {

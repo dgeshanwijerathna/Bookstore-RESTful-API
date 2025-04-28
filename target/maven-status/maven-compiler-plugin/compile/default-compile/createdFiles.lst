@@ -2,7 +2,6 @@ com\mycompany\cw2\storage\DataStore.class
 com\mycompany\cw2\exception\CustomerNotFoundException.class
 com\mycompany\cw2\model\Book.class
 com\mycompany\cw2\resource\CartResource.class
-com\mycompany\cw2\TestResource.class
 com\mycompany\cw2\exception\mappers\CartNotFoundExceptionMapper.class
 com\mycompany\cw2\model\Cart.class
 com\mycompany\cw2\exception\mappers\OutOfStockExceptionMapper.class
@@ -12,11 +11,9 @@ com\mycompany\cw2\resource\BookResource.class
 com\mycompany\cw2\model\Order.class
 com\mycompany\cw2\exception\BookNotFoundException.class
 com\mycompany\cw2\resource\CustomerResource.class
-com\mycompany\cw2\resources\JavaEE8Resource.class
 com\mycompany\cw2\exception\CartNotFoundException.class
 com\mycompany\cw2\exception\InvalidInputException.class
 com\mycompany\cw2\exception\mappers\BookNotFoundExceptionMapper.class
-com\mycompany\cw2\resource\HelloWorldResource.class
 com\mycompany\cw2\model\Customer.class
 com\mycompany\cw2\ApplicationConfig.class
 com\mycompany\cw2\resource\CartResource$BookIdRequest.class

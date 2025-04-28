@@ -19,7 +19,6 @@ public class InvalidInputExceptionMapper implements ExceptionMapper<InvalidInput
     @Override
     public Response toResponse(InvalidInputException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-      //  errorResponse.put("status", Response.Status.BAD_REQUEST.getStatusCode());
         errorResponse.put("message", exception.getMessage());
         
         return Response.status(Response.Status.BAD_REQUEST)

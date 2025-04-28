@@ -19,7 +19,6 @@ public class CartNotFoundExceptionMapper implements ExceptionMapper<CartNotFound
     @Override
     public Response toResponse(CartNotFoundException exception) {
         Map<String, Object> errorResponse = new HashMap<>();
-      //  errorResponse.put("status", Response.Status.NOT_FOUND.getStatusCode());
         errorResponse.put("message", exception.getMessage());
         
         return Response.status(Response.Status.NOT_FOUND)

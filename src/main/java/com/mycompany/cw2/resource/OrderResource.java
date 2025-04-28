@@ -23,11 +23,9 @@ import java.util.*;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderResource {
-    // customerId -> List of Orders
     private static Map<Integer, List<Order>> orderStore = new HashMap<>();
     private static int currentOrderId = 1;
     
-    // POST /customers/{customerId}/orders
     @POST
     public Response placeOrder(@PathParam("customerId") int customerId) {
         // Validate customerId
@@ -35,7 +33,6 @@ public class OrderResource {
             throw new InvalidInputException("Customer ID must be a positive number");
         }
         
-        // Get cart - CartResource.getCartByCustomerId now throws CartNotFoundException if not found
         Cart cart = CartResource.getCartByCustomerId(customerId);
         
         // Check if cart is empty
@@ -46,23 +43,17 @@ public class OrderResource {
         Order order = new Order(currentOrderId++, customerId, new ArrayList<>(cart.getBookIds()));
         orderStore.computeIfAbsent(customerId, k -> new ArrayList<>()).add(order);
         
-        // Clear cart after placing order - This method now throws exceptions if needed
         CartResource.clearCart(customerId);
         
         return Response.status(Response.Status.CREATED).entity(order).build();
     }
     
-    // GET /customers/{customerId}/orders
     @GET
     public Response getAllOrdersForCustomer(@PathParam("customerId") int customerId) {
         // Validate customerId
         if (customerId <= 0) {
             throw new InvalidInputException("Customer ID must be a positive number");
         }
-        
-        // Check if customer exists
-        // This might be a good place to check with a CustomerService
-        // For now we'll just validate the input
         
         List<Order> orders = orderStore.get(customerId);
         if (orders == null || orders.isEmpty()) {
@@ -72,7 +63,6 @@ public class OrderResource {
         return Response.ok(orders).build();
     }
     
-    // GET /customers/{customerId}/orders/{orderId}
     @GET
     @Path("/{orderId}")
     public Response getOrderById(@PathParam("customerId") int customerId,
@@ -97,7 +87,6 @@ public class OrderResource {
             }
         }
         
-        // If we get here, the order was not found
         throw new CustomerNotFoundException("Order with ID " + orderId + " not found for customer with ID " + customerId);
     }
 }
